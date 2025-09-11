@@ -1,6 +1,8 @@
 import pytest
 from src.module_4 import m_4_1_3, m_4_1_4
 
+# === Тесты для задачи 4.1.3 ===
+
 
 @pytest.mark.parametrize(
     "data, expected",
@@ -17,6 +19,9 @@ from src.module_4 import m_4_1_3, m_4_1_4
 )
 def test_m_4_1_3(data, expected):
     assert m_4_1_3(data) == expected
+
+
+# === Тесты для задачи 4.1.4 ===
 
 
 @pytest.mark.parametrize(
