@@ -1,7 +1,7 @@
 # Stepick.org — PROкод: продвинутый курс по Python
 # 4. Работа с функциями. Начало
 
-from string import punctuation
+from sys import stdin
 
 
 # pylint: disable=W0105
@@ -195,3 +195,180 @@ def get_strongest_avenger(names, powers):
     avengers = zip(names, powers)
     max_power = max(avengers, key=lambda a: a[1])
     return max_power[0]
+
+
+# 4.3 Именованные аргументы: формальные и фактические параметры
+
+# === Задача 1. Миссия Отомстителей: Приветствие героя ===
+"""
+    Реализуйте функцию greet_hero(name, greeting="Привет"),
+    которая принимает:
+        - name --> имя героя (строка);
+        - greeting --> приветствие (строка), по умолчанию "Привет".
+    Функция должна вывести строку в формате:
+        <greeting>, <name>!
+    Ввод данных и вызов функции скрыты --> нужно только определить
+    функцию, без input() и без явного вызова.
+    """
+
+
+def greet_hero(name, greeting="Привет"):
+    print(f"{greeting}, {name}!")
+
+
+# === Задача 2. Платформа для майнинга ===
+"""
+    Объявите функцию calculate_platform(length, width, mode=0), где:
+        - length --> длина платформы (целое число),
+        - width --> ширина платформы (целое число),
+        - mode --> режим вычисления (по умолчанию 0).
+    Функция должна возвращать (return):
+        - периметр по формуле 2 * (length + width), если mode == 0;
+        - площадь по формуле length * width, если mode != 0.
+    Требования:
+        - использовать return;
+        - не вызывать функцию и не использовать input(), только объявить.
+    """
+
+
+def calculate_platform(length, width, mode=0):
+    if mode == 0:
+        return 2 * (length + width)
+    return length * width
+
+
+# === Задача 3. Регистрация участника фестиваля ===
+"""
+    Реализуйте функцию
+    register(name, position="Студент", city="Неизвестен"),
+    которая выводит строку:
+        Участник {name} зарегистрирован как {position} из города {city}.
+    Требования: name --> обязательный параметр (строка).
+    Если position или city не переданы или состоят только из пробелов,
+        внутри функции нужно подставить значения по умолчанию:
+        "Студент" и "Неизвестен" соответственно
+        (проверка пробелов --> в теле функции).
+    Ввод и вызов функции скрыты --> требуется только определить
+    функцию, без input() и без явного вызова.
+    """
+
+
+def register(name: str, position="Студент", city="Неизвестен"):
+    if not position or position.isspace():
+        position = "Студент"
+    if not city or city.isspace():
+        city = "Неизвестен"
+    res = f"Участник {name} зарегистрирован как {position} из города {city}."
+    print(res)
+    return res
+
+
+# === Задача 4. Расчёт итоговой стоимости заказа ===
+"""
+    Реализуйте функцию
+    calculate_final_price(base_price, discount=0, shipping_fee=0),
+    где:
+        - base_price --> базовая стоимость заказа
+          (число, обязательный параметр);
+        - discount --> процент скидки
+          (число или строка; по умолчанию 0);
+        - shipping_fee --> стоимость доставки
+          (число или строка; по умолчанию 0).
+    Функция должна вычислить:
+        final_price = base_price - (base_price * discount / 100) + shipping_fee
+    и вывести строку:
+        Итоговая сумма заказа: <final_price>
+    Особенности:
+        Ввод и вызов функции скрыты; нужно только определить функцию,
+        без input() и без явного вызова.
+        Тесты передают discount и shipping_fee именованными аргументами.
+        Если discount или shipping_fee приходят как пустая строка или
+        строка из пробелов, внутри функции трактуйте их как 0.
+        Если приходят как непустые строки с числами --> преобразуйте к числам.
+    """
+
+
+def calculate_final_price(base_price: int, discount=0, shipping_fee=0):
+    def chek(arg):
+        if isinstance(arg, str):
+            if not arg or arg.isspace():
+                return 0
+            elif arg.isalnum():
+                return int(arg)
+            else:
+                return 0
+        return arg
+
+    final_price = base_price - (base_price * chek(discount) / 100) + chek(shipping_fee)
+    result = f"Итоговая сумма заказа: {final_price}"
+    print(result)
+    return result
+
+
+# === Задача 5. Регистрация и инициалы: Заркандский формат ===
+"""
+    Реализуйте функцию create_initials(name, surname, patronymic),
+    которая принимает именованные аргументы:
+        - name --> имя;
+        - surname --> фамилия;
+        - patronymic --> отчество.
+    Функция должна вывести (через print) инициалы в формате:
+        - первая буква фамилии + первая буква имени + первая буква отчества,
+          все буквы --> в верхнем регистре.
+    Вызов функции и ввод с клавиатуры выполняются во внешнем коде
+    --> здесь нужно только объявить функцию.
+    """
+
+
+def create_initials(name, surname, patronymic):
+    result = f"{surname[0].upper()}{name[0].upper()}{patronymic[0].upper()}"
+    print(result)
+    return result
+
+
+# === Задача 6. Формирование профиля героя ===
+"""
+    Реализуйте функцию
+    create_profile(name, power_level, ability="Неизвестная суперспособность"),
+    которая:
+
+    Проверяет имя, если name пустое или состоит только из пробелов --> выведите
+        Ошибка: имя не может быть пустым
+        и завершите функцию.
+
+    Проверяет уровень силы.
+        если power_level не положительное число (≤ 0) --> выведите
+        Ошибка: уровень силы должен быть положительным числом
+        и завершите функцию.
+
+    Обрабатывает суперспособность.
+        если ability пустая или состоит только из пробелов -->
+        замените её на "Неизвестная суперспособность".
+
+    Если все проверки пройдены --> выведите профиль героя в точном формате:
+            Герой: <name>
+            Уровень силы: <power_level>
+            Суперспособность: <ability>
+
+    Требования:
+        ввод и вызов скрыты; нужно только объявить функцию,
+        без input() и без явного вызова;
+        проверку «только пробелы» выполняйте внутри функции
+        (используйте например strip()).
+    """
+
+
+def create_profile(name, power_level, ability="Неизвестная суперспособность"):
+    if not name or name.isspace():
+        result = "Ошибка: имя не может быть пустым"
+        print(result)
+        return result
+    if power_level <= 0:
+        result = "Ошибка: уровень силы должен быть положительным числом"
+        print(result)
+        return result
+    if not ability or ability.isspace():
+        ability = "Неизвестная суперспособность"
+    result = f"Герой: {name}\nУровень силы: {power_level}\nСуперспособность: {ability}"
+    print(result)
+    return result
