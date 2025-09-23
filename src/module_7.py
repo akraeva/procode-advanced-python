@@ -387,7 +387,7 @@ def m_7_3_1(text: str):
 # print(m_7_3_1(input()))
 
 
-# 7.4 Методы словарей
+# 7.4 Методы словарей: Решаем практические задачи
 
 
 # === Задача 1. Проверка наличия ключа и получение значения ===
@@ -508,7 +508,8 @@ def m_7_4_03(data: str):
 
 
 def m_7_4_04(data: str):
-    pass
+    nums = dict.fromkeys(data.split())
+    return " ".join(nums)
 
 
 # print(m_7_4_04(input()))
@@ -524,7 +525,10 @@ def m_7_4_04(data: str):
 
 
 def m_7_4_05(data: str):
-    pass
+    counter = {}
+    for word in data.split():
+        counter[word] = counter.get(word, 0) + 1
+    return max(counter, key=lambda word: (counter[word], word))
 
 
 # print(m_7_4_05(input()))
@@ -534,9 +538,9 @@ def m_7_4_05(data: str):
 """
     На вход подаётся список pets, где каждый элемент кортеж вида
         (кличка собаки, имя мага, фамилия мага, возраст мага).
-    Требуется создать словарь, в котором ключ 
+    Требуется создать словарь, в котором ключ
         --> кортеж (имя, фамилия, возраст) владельца,
-            а значение 
+            а значение
         --> список кличек его собак в порядке появления
             в исходных данных.
     Выведите получившийся словарь.
@@ -544,12 +548,19 @@ def m_7_4_05(data: str):
     Ввод осуществляется строкой: pets = eval(input()).
     """
 
-
-def m_7_4_06(data: str):
-    pass
+# import ast
 
 
-# print(m_7_4_06(input()))
+def m_7_4_06(pets):
+    wizards = {}
+    for pet in pets:
+        name = pet[0]
+        wizard = tuple(pet[1:])
+        wizards.setdefault(wizard, []).append(name)
+    return wizards
+
+
+# print(m_7_4_06(ast.literal_eval(input())))
 
 
 # === Задача 7. Операция «Антарктический Шторм» ===
@@ -564,7 +575,13 @@ def m_7_4_06(data: str):
 
 
 def m_7_4_07(data: str):
-    pass
+    ids = data.split()
+    counter = {}
+    for i, id in enumerate(ids):
+        if id in counter:
+            ids[i] += f"_{counter[id]}"
+        counter[id] = counter.get(id, 0) + 1
+    return " ".join(ids)
 
 
 # print(m_7_4_07(input()))
@@ -579,11 +596,21 @@ def m_7_4_07(data: str):
     """
 
 
+# from sys import stdin
+
+
 def m_7_4_08(data: str):
-    pass
+    def counter(word):
+        count = {}
+        for letter in word:
+            count[letter] = count.get(letter, 0) + 1
+        return count
+
+    word_1, word_2 = data.strip().lower().split("\n")
+    return "ДА" if counter(word_1) == counter(word_2) else "НЕТ"
 
 
-# print(m_7_4_08(input()))
+# print(m_7_4_08(stdin.read()))
 
 
 # === Задача 9. Космический справочник экспедиции ===
@@ -600,12 +627,25 @@ def m_7_4_08(data: str):
     Если контакта с таким именем нет, выведите строку абонент не найден.
     """
 
+# from sys import stdin
+
 
 def m_7_4_09(data: str):
-    pass
+    input_data = data.strip().lower().split("\n")
+    n = int(input_data[0])
+    persons, queries = input_data[1 : n + 1], input_data[n + 2 :]
+    phone_book = {}
+    for person in persons:
+        phone, name = person.split()
+        phone_book.setdefault(name, []).append(phone)
+    result = [
+        " ".join(phone_book[name]) if name in phone_book else "абонент не найден"
+        for name in queries
+    ]
+    return "\n".join(result)
 
 
-# print(m_7_4_09(input()))
+# print(m_7_4_09(stdin.read()))
 
 
 # === Задача 10. Анализ активности пользователей в InstaBuzz ===
@@ -622,12 +662,27 @@ def m_7_4_09(data: str):
         Значения разделяйте пробелом.
     """
 
+# from sys import stdin
+
 
 def m_7_4_10(data: str):
-    pass
+    users = {}
+    for line in data.strip().split("\n")[1:]:
+        name, likes, comments = line.split()
+        if name.lower() in users:
+            users[name.lower()]["likes"] += int(likes)
+            users[name.lower()]["comments"] += int(comments)
+        else:
+            users[name.lower()] = {
+                "name": name,
+                "likes": int(likes),
+                "comments": int(comments),
+            }
+    result = [" ".join(map(str, user.values())) for user in users.values()]
+    return "\n".join(result)
 
 
-# print(m_7_4_10(input()))
+# print(m_7_4_10(stdin.read()))
 
 
 # === Задача 11. Цифровой следопыт ===
@@ -642,7 +697,10 @@ def m_7_4_10(data: str):
 
 
 def m_7_4_11(data: str):
-    pass
+    result = {}
+    for i, ch in enumerate(data):
+        result.setdefault(ch, []).append(i)
+    return result
 
 
 # print(m_7_4_11(input()))
@@ -650,7 +708,7 @@ def m_7_4_11(data: str):
 
 # === Задача 12. Отбор лучших идей в конкурсе «FutureTech» ===
 """
-    Шаг 1. Считайте словарь scores, где 
+    Шаг 1. Считайте словарь scores, где
         - ключи --> уникальные идентификаторы участников,
         - значения --> набранные баллы.
     Шаг 2. Сформируйте новый словарь, из которого удалены все пары,
@@ -659,15 +717,16 @@ def m_7_4_11(data: str):
     """
 
 # import ast
-# import sys
+# from sys import stdin
 
 
-def m_7_4_12(data: str):
-    input_data = sys.stdin.read().strip()
-    scores = ast.literal_eval(input_data)
+def m_7_4_12(scores):
+    minimum = min(scores.values())
+    result = {key: value for key, value in scores.items() if value != minimum}
+    return result
 
 
-# print(m_7_4_12(input()))
+# print(m_7_4_12(ast.literal_eval(stdin.read().strip())))
 
 
 # === Задача 13. Муравьиная Почта, клавиатурные нажатия ===
@@ -705,40 +764,13 @@ def m_7_4_13(data: str):
         9: "WXYZ",
         0: " ",
     }
-    chars = {
-        "A": "2",
-        "B": "22",
-        "C": "222",
-        "D": "3",
-        "E": "33",
-        "F": "333",
-        "G": "4",
-        "H": "44",
-        "I": "444",
-        "J": "5",
-        "K": "55",
-        "L": "555",
-        "M": "6",
-        "N": "66",
-        "O": "666",
-        "P": "7",
-        "Q": "77",
-        "R": "777",
-        "S": "7777",
-        "T": "8",
-        "U": "88",
-        "V": "888",
-        "W": "9",
-        "X": "99",
-        "Y": "999",
-        "Z": "9999",
-        " ": "0",
-        ".": "1",
-        ",": "11",
-        "!": "111",
-        "?": "1111",
-        ":": "11111",
+    code = {
+        ch: str(key) * (i + 1)
+        for key, value in chrs.items()
+        for i, ch in enumerate(value)
     }
+    result = [code[ch] for ch in data.upper() if ch in code]
+    return "".join(result)
 
 
 # print(m_7_4_13(input()))
@@ -784,4 +816,4 @@ def morse_test(letters=None, morse=None):
     return result_letters, result_morse
 
 
-print(*morse_test(), sep="\n")
+# print(*morse_test(), sep="\n")
