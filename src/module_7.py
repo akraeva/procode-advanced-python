@@ -817,3 +817,154 @@ def morse_test(letters=None, morse=None):
 
 
 # print(*morse_test(), sep="\n")
+
+
+# 7.5  Работа с вложенными словарями и генераторами словарей
+
+
+# === Задача 1. Словарь аниме-персонажей ===
+"""
+    Шаг 1. Считайте три строки: имя персонажа, его возраст и любимое аниме.
+    Шаг 2. Добавьте этого персонажа в уже существующий словарь с несколькими
+        записями (каждая запись хранит имя, возраст, любимое аниме).
+    Шаг 3. Выведите информацию о всех персонажах словаря строго в формате:
+        сначала строка-заголовок: Информация о всех персонажах:
+        затем для каждого персонажа три строки:
+            Имя: <имя>
+            Возраст: <возраст>
+            Любимое аниме: <аниме>
+        между блоками персонажей --> пустая строка.
+    Обратите внимание на пустые строки между выводами!
+    """
+
+# from sys import stdin
+
+
+def m_7_5_1(data: str, anime_characters=None):
+    if not anime_characters:
+        anime_characters = {
+            "Naruto": {"age": 17, "favorite_anime": "Naruto Shippuden"},
+            "Luffy": {"age": 19, "favorite_anime": "One Piece"},
+        }
+    name, age, favorite_anime = data.strip().split("\n")
+    anime_characters[name] = {"age": age, "favorite_anime": favorite_anime}
+    result = (
+        f"Имя: {name}\nВозраст: {info["age"]}\nЛюбимое аниме: {info["favorite_anime"]}"
+        for name, info in anime_characters.items()
+    )
+    return f"Информация о всех персонажах:\n\n{'\n\n'.join(result)}"
+
+
+# print(m_7_5_1(stdin.read(), anime_characters))
+
+
+# === Задача 2. Аниме-коллекция ===
+"""
+    Шаг 1. Считайте данные о 5 аниме, по одному на строку, в формате:
+        Название: <...>, Количество серий: <...>,
+        Жанр: <...>, Просмотрено: <True|False>.
+    Шаг 2. Выведите список «Просмотренные аниме:», затем названия всех тайтлов
+        с Просмотрено: True, по одному названию в строке.
+    Шаг 3. Выведите список «Аниме, которые хотите посмотреть:»,
+        затем названия всех тайтлов с Просмотрено: False,
+        по одному названию в строке.
+    Шаг 4. Выведите список «Аниме в жанре <жанр>:» для жанра, указанного
+        пользователем, затем названия подходящих тайтлов,
+        по одному названию в строке.
+    Соблюдайте пустые строки между блоками вывода в точности как в примере.
+    Начальный код в программе уже присутствует.
+    """
+
+# from sys import stdin
+
+
+def m_7_5_2(data: str):
+    animes = []
+    for info in data.strip().split("\n"):
+        anime = {}
+        for description in info.split(","):
+            key, value = map(str.strip, description.split(":"))
+            if key == "Количество серий":
+                value = int(value)
+            elif key == "Просмотрено":
+                value = value == "True"
+            anime[key] = value
+        animes.append(anime)
+
+    step2, step3, step4 = [], [], []
+    genre = "Action"
+
+    for anime in animes:
+        (step2 if anime["Просмотрено"] else step3).append(anime["Название"])
+        if anime["Жанр"] == genre:
+            step4.append(anime["Название"])
+
+    result = []
+    result.append(f"Просмотренные аниме:\n{'\n'.join(step2)}")
+    result.append(f"Аниме, которые хотите посмотреть:\n{'\n'.join(step3)}")
+    result.append(f"Аниме в жанре {genre}:\n{'\n'.join(step4)}")
+    return "\n\n".join(result)
+
+
+# print(m_7_5_2(stdin.read()))
+
+
+# === Задача 3. Контактная книга клуба ===
+"""
+    Шаг 1. Считайте имя участника клуба.
+    Шаг 2. Если участник есть в базе, выведите две строки
+        (база контактов уже есть в программе):
+            Телефон: <номер>
+            Адрес: <адрес>
+        Иначе выведите строку: Такого участника нет в клубе.
+    Шаг 3. Считайте цифру для фильтрации телефонных номеров.
+    Шаг 4. Выведите заголовок: Результаты фильтрации по цифре '<цифра>':
+        Затем выведите все пары в формате <Имя>: <номер> для тех контактов,
+        чьи номера начинаются с этой цифры, в порядке обхода исходного
+        словаря. Для этого используй генератор словаря.
+    Шаг 5. Если подходящих контактов нет, выведите строку:
+        Нет контактов, начинающихся с цифры '<цифра>'.
+    """
+
+# from sys import stdin
+
+
+def m_7_5_3(data: str, club=None):
+    if not club:
+        club = {
+            "Ivan": {"phone": "123-456-7890", "address": "1234 Pine St"},
+            "Maria": {"phone": "987-654-3210", "address": "4321 Oak Ave"},
+            "Alex": {"phone": "555-789-4567", "address": "5678 Elm Rd"},
+            "John": {"phone": "111-222-3333", "address": "8765 Maple Ln"},
+            "Olga": {"phone": "222-333-4444", "address": "7890 Birch Blvd"},
+            "Nina": {"phone": "333-444-5555", "address": "6789 Cedar Dr"},
+            "Eugene": {"phone": "444-555-6666", "address": "5432 Spruce St"},
+            "Dmitry": {"phone": "555-666-7777", "address": "2345 Fir Ct"},
+            "Sofia": {"phone": "666-777-8888", "address": "1230 Maple Ave"},
+            "Anton": {"phone": "777-888-9999", "address": "4567 Pineapple Rd"},
+        }
+    name, num = data.strip().split("\n")
+    member = "Такого участника нет в клубе"
+    if name in club:
+        contact = club[name]
+        phone, address = contact["phone"], contact["address"]
+        member = f"Телефон: {phone}\nАдрес: {address}"
+
+    phones = {
+        contact: info["phone"]
+        for contact, info in club.items()
+        if info["phone"].startswith(num)
+    }
+    result = [
+        member,
+        (
+            f"Результаты фильтрации по цифре '{num}':"
+            if phones
+            else f"Нет контактов, начинающихся с цифры '{num}'"
+        ),
+    ]
+    result.extend(f"{key}: {value}" for key, value in phones.items())
+    return "\n".join(result)
+
+
+# print(m_7_5_3(stdin.read(), club_contacts))
