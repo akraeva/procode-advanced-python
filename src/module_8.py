@@ -188,9 +188,15 @@ def m_8_1_5(data: str):
         4 Вывести IP-адрес и сайт.
     """
 
+# import json
+
 
 def m_8_1_6(data: str):
-    pass
+    ips = json.loads(data)
+    address = max(ips, key=lambda i: sum((ips[i]).values()))
+    sites = ips[address]
+    site = max(sites, key=lambda s: sites[s])
+    return f"Самый активный IP: {address}\nНаиболее посещаемый сайт: {site}"
 
 
 # print(m_8_1_6(input()))
@@ -218,12 +224,19 @@ def m_8_1_6(data: str):
         - Вывести итоговое сообщение
     """
 
+# import json
+# from sys import stdin
+
 
 def m_8_1_7(data: str):
-    pass
+    line1, line2 = data.strip().split("\n")
+    decoder = json.loads(line1)
+    text = line2.strip().split()
+    result = (decoder[ch] if ch in decoder else "?" for ch in text)
+    return "".join(result)
 
 
-# print(m_8_1_7(input()))
+# print(m_8_1_7(stdin.read()))
 
 
 # === Задача 8. Ложные личности ===
@@ -247,9 +260,25 @@ def m_8_1_7(data: str):
         - Если все IP уникальны --> вывести "Призрак не найден"
     """
 
+# import json
+
 
 def m_8_1_8(data: str):
-    pass
+    names = json.loads(data)
+    ips = {}
+    caught_you = None
+    for nick, ip in names.items():
+        user_ip = ip.strip()
+        if user_ip:
+            if user_ip in ips:
+                if not caught_you:
+                    caught_you = user_ip
+                ips[user_ip].append(nick)
+            else:
+                ips[user_ip] = [nick]
+    if caught_you:
+        return f"Настоящий хакер: {', '.join(ips[caught_you])} (IP: {caught_you})"
+    return "Призрак не найден"
 
 
 # print(m_8_1_8(input()))
@@ -277,8 +306,17 @@ def m_8_1_8(data: str):
     """
 
 
+# import json
+
+
 def m_8_1_9(data: str):
-    pass
+    locations = json.loads(data)
+    result = []
+    for date in sorted(locations.keys()):
+        location = locations[date].strip()
+        if location not in result:
+            result.append(location)
+    return f"Маршрут: {' → '.join(result)}"
 
 
 # print(m_8_1_9(input()))
@@ -301,9 +339,17 @@ def m_8_1_9(data: str):
     - Вывести город, где его нашли или "Призрак снова скрылся...".
     """
 
+# import json
+# from sys import stdin
+
 
 def m_8_1_10(data: str):
-    pass
+    line1, line2 = data.strip().split("\n")
+    real, unreal = json.loads(line1), json.loads(line2)
+    for date, city in real.items():
+        if city != unreal[date]:
+            return f"🔥 Призрак пойман в городе: {city}!"
+    return "👻 Призрак снова скрылся..."
 
 
-# print(m_8_1_10(input()))
+# print(m_8_1_10(stdin.read()))
