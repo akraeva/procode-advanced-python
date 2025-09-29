@@ -216,3 +216,197 @@ def m_9_2_5(data: str):
 
 
 # print(m_9_2_5(input()))
+
+
+# 9.3 Методы добавления и удаления элементов в множества
+
+
+# === Задача 1.Древние руины ===
+"""
+    Шаг 1. Считайте натуральное число N --> количество мест раскопок.
+    Шаг 2. Считайте следующие N строк. Каждая строка содержит
+           номера артефактов, разделённые пробелами.
+    Шаг 3. Определите общее число различных (уникальных) номеров артефактов,
+           встречающихся хотя бы в одном месте.
+    Шаг 4. Выведите единственное число --> количество уникальных артефактов.
+    """
+
+# from sys import stdin
+
+
+def m_9_3_1(data: str):
+    artifacts = set(num for line in data[1:].split("\n") for num in line.split())
+    return len(artifacts)
+
+
+# print(m_9_3_1(stdin.read()))
+
+
+# === Задача 2. Управление списком/множеством участников ===
+"""
+    Шаг 1. Создайте начальное множество участников: {1, 2, 3, 4, 5}.
+    Шаг 2. Считайте три строки входных данных:
+        - первая строка --> номера новых участников через пробел
+          (добавьте их во множество);
+        - вторая строка --> номер участника, которого нужно удалить
+          методом remove();
+        - третья строка --> номер участника, которого нужно удалить
+          методом discard().
+    Шаг 3. Удалите одного случайного участника методом pop()
+           и выведите его номер отдельной строкой.
+    Шаг 4. Очистите множество методом clear().
+    Шаг 5. После каждого шага выведите результат строго в
+           таком порядке и формате:
+            - После добавления участников: {…}
+            - После удаления участника с номером X: {…}
+            - После удаления участника с номером Y (метод discard): {…}
+            - Удалён случайный участник с номером Z.
+            - Оставшиеся участники: {…}
+            - После очистки списка участников: set()
+    Формат отображения множества: элементы по возрастанию, в фигурных скобках,
+        разделены запятой и пробелом (как в примере).
+    """
+
+# from sys import stdin
+
+
+def m_9_3_2(data: str):
+    lines = data.strip().split("\n")
+    participants = {1, 2, 3, 4, 5}
+    new_users = set(map(int, lines[0].split()))
+    to_remove, to_discard = map(int, lines[1:])
+    result = []
+    participants |= new_users
+    result.append(f"После добавления участников: {set(sorted(participants))}")
+    participants.remove(to_remove)
+    result.append(
+        f"После удаления участника с номером {to_remove}: {set(sorted(participants))}"
+    )
+    participants.discard(to_discard)
+    result.append(
+        f"После удаления участника с номером {to_discard} (метод discard): {set(sorted(participants))}"
+    )
+    pop_i = participants.pop()
+    result.append(f"Удалён случайный участник с номером {pop_i}.")
+    result.append(f"Оставшиеся участники: {set(sorted(participants))}")
+    participants.clear()
+    result.append(f"После очистки списка участников: {participants}")
+    return "\n".join(result)
+
+
+# print(m_9_3_2(stdin.read()))
+
+
+# === Задача 3. Склад автомобилей ===
+"""
+    Шаг 1. Считайте целое число N --> количество операций.
+    Шаг 2. Затем обработайте N строк, каждая из которых --> одна из команд:
+        - add X --> добавить идентификатор X в набор;
+        - remove X --> удалить X из набора
+          (если X отсутствует, возникает ошибка);
+        - discard X --> удалить X, если он есть (ошибки не возникает);
+        - pop --> удалить (и вернуть) случайный элемент набора
+          (если набор пуст, возникает ошибка);
+        - clear --> полностью очистить набор.
+    Шаг 3. По завершении всех операций выведите содержимое набора.
+        - Если набор пуст, выведите ровно: Множество пустое.
+        - Если не пуст, выведите элементы одной строкой, разделяя пробелом.
+    """
+
+# from sys import stdin
+
+
+def m_9_3_3(data: str):
+    auto_ids = set()
+    commands = data.strip().split("\n")[1:]
+    for line in commands:
+        command, *auto_id = line.split()
+        match command:
+            case "add":
+                auto_ids.add(auto_id[0])
+            case "remove":
+                auto_ids.remove(auto_id[0])
+            case "discard":
+                auto_ids.discard(auto_id[0])
+            case "pop":
+                auto_ids.pop()
+            case "clear":
+                auto_ids.clear()
+    if auto_ids:
+        return " ".join(sorted(auto_ids))
+    else:
+        return "Множество пустое"
+
+
+# print(m_9_3_3(stdin.read()))
+
+
+# === Задача 4. Фруктовый сад ===
+"""
+    Шаг 1. Изначальное множество фруктов (ровно 20 штук), в программе уже есть:
+        {"apple", "pear", "peach", "plum", "cherry",
+        "banana", "orange", "lime", "lemon", "grapefruit",
+        "mango", "papaya", "pineapple", "kiwi", "strawberry",
+        "blueberry", "raspberry", "grape", "melon", "watermelon"}
+    Шаг 2. Считайте целое число N --> количество операций.
+    Шаг 3. Обработайте последующие N строк-команд:
+        - add X --> добавить фрукт X в множество;
+        - remove X --> удалить X из множества
+                    (если X отсутствует, возникает ошибка);
+        - discard X --> удалить X, если он есть (ошибки не возникает);
+        - pop --> удалить (и вернуть) случайный элемент множества
+                    (если множество пусто, возникает ошибка);
+        - clear --> полностью очистить множество.
+    Шаг 4. По завершении всех операций:
+        - если множество пусто, выведите: Фруктовый сад пуст;
+        - иначе выведите все оставшиеся фрукты одной строкой через пробел,
+          отсортировав их в лексикографическом порядке.
+    """
+
+# from sys import stdin
+
+
+def m_9_3_4(data: str):
+    orchard = {
+        "apple",
+        "pear",
+        "peach",
+        "plum",
+        "cherry",
+        "banana",
+        "orange",
+        "lime",
+        "lemon",
+        "grapefruit",
+        "mango",
+        "papaya",
+        "pineapple",
+        "kiwi",
+        "strawberry",
+        "blueberry",
+        "raspberry",
+        "grape",
+        "melon",
+        "watermelon",
+    }
+    commands = data.strip().split("\n")[1:]
+    for line in commands:
+        command, *fruit = line.split()
+        match command:
+            case "add":
+                orchard.add(fruit[0])
+            case "remove":
+                orchard.remove(fruit[0])
+            case "discard":
+                orchard.discard(fruit[0])
+            case "pop":
+                orchard.pop()
+            case "clear":
+                orchard.clear()
+    if orchard:
+        return " ".join(sorted(orchard))
+    else:
+        return "Фруктовый сад пуст"
+
+
+# print(m_9_3_4(stdin.read()))
