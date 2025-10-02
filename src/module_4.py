@@ -1,7 +1,7 @@
 # Stepick.org — PROкод: продвинутый курс по Python
 # 4. Работа с функциями. Начало
 
-from sys import stdin
+from string import punctuation
 
 
 # pylint: disable=W0105
