@@ -151,3 +151,58 @@ def m_11_1_5(func_name, data):
         "lex_min4": lex_min4,
     }
     return dispatch[func_name](*data)
+
+
+# 11.2 Использование * и ** для упаковки и распаковки данных
+
+
+# === Задача 1. Потоки данных CyberMatrix ===
+
+"""
+    Шаг 1. Считайте из одной строки ровно 10 целых чисел,
+        разделённых пробелами.
+    Шаг 2. Сформируйте переменные строго с указанными именами:
+        core_data --> список из первых пяти чисел входного потока;
+        signal1, signal2, signal3, signal4 --> следующие четыре числа;
+        activation_code --> последнее число.
+    Шаг 3. Выведите элементы из core_data в одну строку через пробел.
+    Важно: названия переменных не менять. Ввод производится одной строкой.
+    """
+
+
+def m_11_2_1(data: str):
+    nums = [int(num) for num in data.split()]
+    *core_data, signal1, signal2, signal3, signal4, activation_code = nums
+    print(*core_data)
+
+
+# m_11_2_1(input())
+
+# === Задача 2. Кодекс Древних Артефактов ===
+
+"""
+    Шаг 1. Считайте две строки входных данных:
+        — первая строка содержит свитки (элементы через пробел);
+        — вторая строка содержит реликвии (элементы через пробел).
+    Шаг 2. Преобразуйте строки в списки scrolls и relics
+        с сохранением порядка элементов.
+    Шаг 3. Сформируйте список artifact_collection, в котором:
+        — сначала идут все элементы из scrolls (в их исходном порядке);
+        — затем добавляются только те элементы из relics,
+          которых нет в scrolls (порядок relics сохраняется).
+    Шаг 4. При формировании artifact_collection обязательно
+        используйте распаковку *.
+    Шаг 5. Выведите элементы artifact_collection в одну строку через пробел.
+    """
+
+
+# from sys import stdin
+
+
+def m_11_2_2(data: str):
+    scrolls, relics = (list(line.split()) for line in data.strip().split("\n"))
+    artifact_collection = [*scrolls, *(a for a in relics if a not in scrolls)]
+    print(*artifact_collection)
+
+
+# m_11_2_2(stdin.read())
