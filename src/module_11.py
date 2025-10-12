@@ -583,3 +583,120 @@ def m_11_6_3(data: str):
     # для тестирования
     data_type, data_nums = data.split("\n")
     return data_converter(data_type)(data_nums)
+
+
+# 11.7 Области видимости и использование global и nonlocal
+
+
+# === Задача 1.Вложенные функции и область видимости ===
+"""
+    Шаг 1. В программе уже задана функция initialize_data()
+        с вложенной функцией update_data().
+    Шаг 2. Отредактируйте код так, чтобы переменная username,
+        объявленная в initialize_data(), изменялась внутри update_data().
+    Шаг 3. После запуска программа должна вывести обновлённое
+        имя пользователя дважды:
+            — один раз внутри update_data() (там уже есть print),
+            — второй раз после вызова update_data() в initialize_data()
+              (там тоже уже есть print).
+    Ограничения:
+            – Не меняйте имена функций и переменной username.
+            – Формат ввода/вывода должен совпадать с примером.
+    """
+
+
+def m_11_7_1():
+    def initialize_data():
+        username = input()
+
+        def update_data():
+            nonlocal username
+            username = input()
+            print(username)
+
+        update_data()
+        print(username)
+
+    initialize_data()
+
+
+# === Задача 2.Хакерский поединок: global и nonlocal ===
+
+
+"""
+    Шаг 1. На уровне модуля объявите глобальную переменную
+        security_level и присвойте ей значение 0.
+    Шаг 2. Объявите функцию hack_system(), внутри которой:
+        - с помощью ключевого слова global измените security_level на 5;
+        - объявите локальную переменную defense_level и присвойте ей 0;
+        - объявите вложенную функцию defend_system(), в которой
+          с помощью nonlocal измените defense_level на 10;
+        - вызовите defend_system();
+        - верните значение defense_level.
+    Требования и ограничения:
+        - Имена переменных и функций должны совпадать:
+          security_level, hack_system, defend_system, defense_level.
+        - Функцию вызывать не нужно; input() и print() не использовать.
+        - Возвращайте результат через return.
+    """
+
+security_level = 0
+
+
+def hack_system():
+    def defend_system():
+        nonlocal defense_level
+        defense_level = 10
+
+    global security_level
+    security_level = 5
+    defense_level = 0
+    defend_system()
+    return defense_level
+
+
+m_11_7_2 = hack_system
+
+
+# print(m_11_7_2(input()))
+
+
+# === Задача 3. Управление энергией в умном доме ===
+"""
+    Шаг 1. Объявите функцию energy_control() без параметров.
+    Шаг 2. Внутри функции объявите, что переменная
+        total_energy --> глобальная (global total_energy)
+        и уменьшите её на 20 (в примере с 100 до 80).
+    Шаг 3. Объявите локальную переменную,
+        например room = 0 --> текущая энергия комнаты.
+    Шаг 4. Объявите вложенную функцию room_energy(),
+        где с помощью nonlocal room измените значение room на 30.
+    Шаг 5. Вызовите room_energy() внутри energy_control().
+    Шаг 6. Верните из energy_control() кортеж из двух значений:
+        (total_energy, room).
+
+    Ограничения и требования:
+        - Используйте ключевые слова global (для total_energy)
+          и nonlocal (для room).
+        - Имена должны совпадать: total_energy, energy_control, room_energy.
+        - Ничего не печатать, input() не использовать. Функцию только объявить
+          --> её вызов сделают скрытые тесты.
+    """
+
+total_energy = 100
+
+
+def energy_control():
+    def room_energy():
+        nonlocal room
+        room = 30
+
+    global total_energy
+    total_energy -= 20
+    room = 0
+    room_energy()
+
+    return (total_energy, room)
+
+
+m_11_7_3 = energy_control
