@@ -12,7 +12,7 @@ from src.module_12 import (
     m_12_1_9,
     m_12_1_10,
 )
-
+import src.module_12 as module
 
 # для запуска pytest -k "test_12_1_" -q -x --tb=short
 
@@ -31,9 +31,9 @@ from src.module_12 import (
         ),
         # ✅ Тест №2
         (
-            ("Сканер", "Гиперпрыжковый двигатель", "Лазерные пушки", "Щиты"),
+            ("Сканер", "Гиперпрыжковый двигатель", "Лазерные пушки", "m_12_1_6ы"),
             "Проверка систем:\n- Сканер: OK\n- Гиперпрыжковый двигатель: OK"
-            "\n- Лазерные пушки: OK\n- Щиты: OK",
+            "\n- Лазерные пушки: OK\n- m_12_1_6ы: OK",
         ),
         # ✅ Тест №3
         (
@@ -156,3 +156,139 @@ def test_12_1_3(capsys, args, expected_output):
     m_12_1_3(*args)
     captured = capsys.readouterr()
     assert captured.out == expected_output
+
+
+# === Тест для задачи 12.1.4 ===
+
+
+@pytest.mark.parametrize(
+    "a, b, expected",
+    [
+        # ✅ Sample test
+        (24, 36, 12),  # sample
+        # ✅ Тест №2 — числа имеют общий делитель
+        (18, 27, 9),
+        # ✅ Тест №3 — одно число делится на другое
+        (10, 5, 5),
+        # ✅ Тест №4 — взаимно простые числа
+        (7, 13, 1),
+        # ✅ Тест №5 — большие числа с НОД > 1
+        (462, 1071, 21),
+        # ✅ Тест №6 — одинаковые числа
+        (20, 20, 20),
+        # ✅ Тест №7 — одно из чисел равно нулю
+        (0, 25, 25),
+        # ✅ Тест №8 — оба числа нули (граничный случай)
+        (0, 0, 0),
+    ],
+    ids=[
+        "sample",
+        "common_divisor",
+        "divisible_pair",
+        "coprime_numbers",
+        "large_numbers",
+        "equal_numbers",
+        "zero_and_number",
+        "double_zero",
+    ],
+)
+def test_12_1_4(a, b, expected):
+    """Проверяет корректность рекурсивной функции найти_нод."""
+    assert m_12_1_4(a, b) == expected
+
+
+# === Тест для задачи 12.1.5 ===
+
+
+@pytest.mark.parametrize(
+    "n, expected",
+    [
+        # ✅ Sample test
+        (7, 294),  # sample
+        # ✅ Тест №2 — ноль
+        (0, 0),
+        # ✅ Тест №3 — отрицательное число
+        (-3, -126),
+        # ✅ Тест №4 — маленькое положительное число
+        (1, 42),
+        # ✅ Тест №5 — крупное число
+        (1000, 42000),
+        # ✅ Тест №6 — большое отрицательное число
+        (-250, -10500),
+    ],
+    ids=[
+        "sample",
+        "zero",
+        "negative_number",
+        "small_positive",
+        "large_number",
+        "large_negative",
+    ],
+)
+def test_12_1_5(n, expected):
+    """Проверяет работу lambda-функции зашифровать."""
+    assert m_12_1_5(n) == expected
+
+
+# === Тест для задачи 12.1.6 ===
+
+
+def test_12_1_6_basic():
+    shield = m_12_1_6()
+    assert shield() == 10
+    assert shield() == 20
+    assert shield() == 30
+
+
+@pytest.mark.parametrize(
+    "calls, expected",
+    [
+        (1, 10),
+        (5, 50),
+        (10, 100),
+    ],
+    ids=["one_call", "five_calls", "ten_calls"],
+)
+def test_12_1_6_parametrize(calls, expected):
+    shield = m_12_1_6()
+    result = None
+    for _ in range(calls):
+        result = shield()
+    assert result == expected
+
+
+# === Тест для задачи 12.1.7 ===
+
+
+def test_12_1_7_basic():
+
+    assert module.мощность == 50
+    m_12_1_7()
+    assert module.мощность == 75
+
+
+def test_12_1_7_multiple_calls():
+
+    module.мощность = 50
+    m_12_1_7()  # +25
+    m_12_1_7()  # +25
+    m_12_1_7()  # +25
+
+    assert module.мощность == 125
+
+
+@pytest.mark.parametrize(
+    "initial, calls, expected",
+    [
+        (50, 1, 75),
+        (50, 4, 150),
+        (100, 2, 150),
+        (0, 3, 75),
+    ],
+    ids=["one_call", "four_calls", "two_calls_from_100", "three_calls_from_zero"],
+)
+def test_12_1_7_parametrized(initial, calls, expected):
+    module.мощность = initial
+    for _ in range(calls):
+        m_12_1_7()
+    assert module.мощность == expected
