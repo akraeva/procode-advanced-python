@@ -292,3 +292,136 @@ def test_12_1_7_parametrized(initial, calls, expected):
     for _ in range(calls):
         m_12_1_7()
     assert module.мощность == expected
+
+
+# === Тест для задачи 12.1.8 ===
+
+
+def test_12_1_8_basic():
+    ИИ = m_12_1_8()
+    assert ИИ() == 120
+    assert ИИ() == 140
+    assert ИИ() == 160
+
+
+def test_12_1_8_multiple_instances():
+    ИИ1 = m_12_1_8()
+    ИИ2 = m_12_1_8()
+
+    assert ИИ1() == 120
+    assert ИИ1() == 140
+    assert ИИ2() == 120  # новый ИИ должен начинать заново
+    assert ИИ1() == 160
+    assert ИИ2() == 140
+
+
+@pytest.mark.parametrize(
+    "calls, expected",
+    [
+        (1, 120),
+        (2, 140),
+        (5, 200),
+    ],
+    ids=["one_call", "two_calls", "five_calls"],
+)
+def test_12_1_8_parametrize(calls, expected):
+    ИИ = m_12_1_8()
+    result = None
+    for _ in range(calls):
+        result = ИИ()
+    assert result == expected
+
+
+# === Тест для задачи 12.1.9 ===
+
+
+def test_12_1_9_base_shield():
+    assert m_12_1_9() == 200
+
+
+def test_12_1_9_custom_function():
+    def мега_щит():
+        return 300
+
+    мега_щит = module.улучшить_щит(мега_щит)
+    assert мега_щит() == 600
+
+
+@pytest.mark.parametrize(
+    "value, expected",
+    [
+        (1, 2),
+        (10, 20),
+        (123, 246),
+        (0, 0),
+        (-5, -10),
+    ],
+    ids=["one", "ten", "hundred_twenty_three", "zero", "negative"],
+)
+def test_12_1_9_parametrize(value, expected):
+    def test_func():
+        return value
+
+    wrapped = module.улучшить_щит(test_func)
+    assert wrapped() == expected
+
+
+# === Тест для задачи 12.1.10 ===
+
+
+def test_12_1_10_base_attack():
+    assert m_12_1_10() == pytest.approx(150.0)
+
+
+def test_12_1_10_custom_100_percent():
+    """Проверяет декоратор с усилением 100%."""
+
+    @module.модификатор_урона(100)
+    def атака():
+        return 80
+
+    assert атака() == pytest.approx(160.0)
+
+
+def test_12_1_10_custom_25_percent():
+
+    @module.модификатор_урона(25)
+    def атака():
+        return 200
+
+    assert атака() == pytest.approx(250.0)
+
+
+def test_12_1_10_custom_75_percent():
+
+    @module.модификатор_урона(75)
+    def атака():
+        return 120
+
+    assert атака() == pytest.approx(210.0)
+
+
+@pytest.mark.parametrize(
+    "percent, base, expected",
+    [
+        (0, 100, 100.0),
+        (10, 150, 165.0),
+        (200, 50, 150.0),
+        (-50, 200, 100.0),
+        (33.3, 300, 399.9),
+    ],
+    ids=[
+        "zero_boost",
+        "ten_percent",
+        "double_damage",
+        "half_damage",
+        "fractional_percent",
+    ],
+)
+def test_12_1_10_parametrize(percent, base, expected):
+
+    @module.модификатор_урона(percent)
+    def атака():
+        return base
+
+    assert атака() == pytest.approx(expected, rel=1e-3)

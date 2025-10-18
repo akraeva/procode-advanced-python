@@ -169,11 +169,18 @@ m_12_1_7 = улучшить_оружие
     """
 
 
-# from sys import stdin
+def перезагрузить_ИИ():
+    скорость = 100
+
+    def speed_increase():
+        nonlocal скорость
+        скорость += 20
+        return скорость
+
+    return speed_increase
 
 
-def m_12_1_8(data: str):
-    pass
+m_12_1_8 = перезагрузить_ИИ
 
 
 # print(m_12_1_8(stdin.read()))
@@ -190,14 +197,20 @@ def m_12_1_8(data: str):
     """
 
 
-# from sys import stdin
+def улучшить_щит(func):
+    def wrapper():
+        result = func() * 2
+        return result
+
+    return wrapper
 
 
-def m_12_1_9(data: str):
-    pass
+@улучшить_щит
+def щит():
+    return 100
 
 
-# print(m_12_1_9(stdin.read()))
+m_12_1_9 = щит
 
 
 # === Задача 10. Финальная битва ===
@@ -221,11 +234,23 @@ def m_12_1_9(data: str):
     """
 
 
-# from sys import stdin
+def модификатор_урона(процент=50):
+    def decorator(func):
+        def wrapper():
+            result = func() * (1 + процент / 100)
+            return result
+
+        return wrapper
+
+    return decorator
 
 
-def m_12_1_10(data: str):
-    pass
+@модификатор_урона()
+def атака():
+    return 100
+
+
+m_12_1_10 = атака
 
 
 # print(m_12_1_10(stdin.read()))
