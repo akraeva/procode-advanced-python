@@ -117,8 +117,20 @@ m_13_1_4 = transpose
     """
 
 
-def m_13_1_5():
-    pass
+def determinant_3x3(matrix):
+    def det(n, num, m):
+        return num * (-1) ** n * (m[0][0] * m[1][1] - m[0][1] * m[1][0])
+
+    if len(matrix) != 3 or len(matrix[0]) != 3:
+        raise ValueError("Неверный размер матрицы")
+    sum = 0
+    for n, num in enumerate(matrix[0]):
+        m = [[el for i, el in enumerate(line) if i != n] for line in matrix[1:]]
+        sum += det(n, num, m)
+    return sum
+
+
+m_13_1_5 = determinant_3x3
 
 
 # === Задача 6. Архитектор Сети: умножение матриц ===
@@ -128,7 +140,7 @@ def m_13_1_5():
     Шаг 2. Проверь совместимость размеров:
         - число столбцов a должно быть равно числу строк b.
         — если несовместимы, верни ровно строку:
-            ❌ Матрицы несовместимы - нельзя перемножить.
+            ❌ Матрицы несовместимы - нельзя перемножить
     Шаг 3. Иначе верни новую матрицу c размера len(a) х len(b[0]),
         где c[i][j] = Σ a[i][k] * b[k][j] по всем k.
     Шаг 4. Функцию не вызывать, ничего не печатать, только return.
@@ -136,8 +148,21 @@ def m_13_1_5():
     """
 
 
-def m_13_1_6():
-    pass
+def matrix_multiply(a, b):
+    if len(a[0]) != len(b):
+        return "❌ Матрицы несовместимы - нельзя перемножить"
+
+    def multiply(i, j):
+        line = a[i]
+        col = [row[j] for row in b]
+        result = sum(num1 * num2 for num1, num2 in zip(line, col))
+        return result
+
+    result = [[multiply(i, j) for j in range(len(b[0]))] for i in range(len(a))]
+    return result
+
+
+m_13_1_6 = matrix_multiply
 
 
 # === Задача 7. Матрица Сознания ===
@@ -157,8 +182,19 @@ def m_13_1_6():
     """
 
 
-def m_13_1_7():
-    pass
+def is_double_diagonal_equal(matrix):
+    size = len(matrix)
+    if size != len(matrix[0]):
+        return "Матрица не квадратная"
+
+    main, secondary = [], []
+    for i in range(size):
+        main.append(matrix[i][i])
+        secondary.append(matrix[i][size - 1 - i])
+    return main == secondary
+
+
+m_13_1_7 = is_double_diagonal_equal
 
 
 # === Задача 8. Ядро Хроноса ===
@@ -178,14 +214,32 @@ def m_13_1_7():
           иначе --> False.
 
     Если матрица не квадратная или размер чётный, вернуть строку ровно:
-        Матрица не подходит.
+        Матрица не подходит
     Ограничения и подсказки
         - Матрица гарантированно непустая.
         - import не использовать!
-        - Сложность решения должна быть O(n²) --> каждый элемент учитывается не более одного раза в «своём» слое.
-        - Центральный элемент (в самом внутреннем слое при нечётном n) попадает одновременно на обе диагонали; он учитывается оба раза это корректно, потому что присутствует по одному разу в каждой сумме.
+        - Сложность решения должна быть O(n²) --> каждый элемент
+          учитывается не более одного раза в «своём» слое.
+        - Центральный элемент (в самом внутреннем слое при нечётном n)
+          попадает одновременно на обе диагонали; он учитывается оба раза
+          это корректно, потому что присутствует по одному разу в каждой сумме.
     """
 
 
-def m_13_1_8():
-    pass
+def is_diagonal_layer_balance(matrix):
+    size = len(matrix)
+    if size != len(matrix[0]) or size % 2 == 0:
+        return "Матрица не подходит"
+    main, secondary = [], []
+    for i in range(size):
+        main.append(matrix[i][i])
+        secondary.append(matrix[i][size - 1 - i])
+    for i in range(size // 2):
+        m = main[i : size - i]
+        s = secondary[i : size - i]
+        if sum(s) != sum(m):
+            return False
+    return True
+
+
+m_13_1_8 = is_diagonal_layer_balance
