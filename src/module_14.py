@@ -173,7 +173,7 @@ def m_14_1_5():
 # import json
 
 
-def m_14_2_1(data: str):
+def m_14_3_1(data: str):
     status = json.loads(data).get("status")
     return (
         "🚨 Обнаружена угроза! Немедленно прими меры!"
@@ -182,7 +182,7 @@ def m_14_2_1(data: str):
     )
 
 
-# print(m_14_2_1(input()))
+# print(m_14_3_1(input()))
 
 
 # === Задача 2. Доставка модулей с орбитального склада ===
@@ -205,14 +205,14 @@ def m_14_2_1(data: str):
 # import json
 
 
-def m_14_2_2(data: str):
+def m_14_3_2(data: str):
     package = json.loads(data)
     result = [f"Модуль: {key}, количество: {value}" for key, value in package.items()]
     result.append(f"Всего модулей: {sum(package.values())}")
     return "\n".join(result)
 
 
-# print(m_14_2_2(input()))
+# print(m_14_3_2(input()))
 
 
 # === Задача 3. Передача отчёта на Землю ===
@@ -249,7 +249,7 @@ def m_14_2_2(data: str):
 # from sys import stdin
 
 
-def m_14_2_3(data: str):
+def m_14_3_3(data: str):
     d = data.strip().split("\n")
     report = {
         "mission": d[0],
@@ -263,7 +263,7 @@ def m_14_2_3(data: str):
     return result
 
 
-# print(m_14_2_3(stdin.read()))
+# print(m_14_3_3(stdin.read()))
 
 
 # === Задача 4. Сканирование инопланетного артефакта ===
@@ -288,7 +288,7 @@ def m_14_2_3(data: str):
 # import json
 
 
-def m_14_2_4(data: str):
+def m_14_3_4(data: str):
     artifact = json.loads(data)
     result = [
         f"Артефакт {artifact['id']} содержит {len(artifact['components'])} компонента(ов).",
@@ -299,4 +299,4 @@ def m_14_2_4(data: str):
     return "\n".join(result)
 
 
-# print(m_14_2_4(input()))
+# print(m_14_3_4(input()))
